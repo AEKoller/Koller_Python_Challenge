@@ -48,8 +48,9 @@ def budget_analysis(budget_data):
                 monthly_change.append(change)
                 
             previous_month_profit_loss = current_month_profit_loss
+            
     average_change = sum(monthly_change)/ len(monthly_change)
-    #Now I need to find the greatest change, and I will do that by parsing through the list we created that contains the 
+    #Now I need to find the greatest increase and decrease, and I will do that by parsing through the list we created that contains the 
     #changes: monthly_change
     greatest_increase = 0
     greatest_decrease = 0
