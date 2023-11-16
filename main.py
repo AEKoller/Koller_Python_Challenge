@@ -2,7 +2,10 @@ import os
 import csv
 
 budget_data = os.path.join('Pybank','Resources','budget_data.csv')
-#election_data = os.path.join('PyPoll\Resources\election_data.csv')
+output_file_budget = os.path.join('Pybank', 'Analysis', 'budget_results.txt')
+election_data = os.path.join('Pypoll', 'Resources','election_data.csv')
+output_file_election = os.path.join('Pypoll', 'Analysis', 'election_results.txt')
+
 
 #budget_data analysis
 
@@ -62,21 +65,138 @@ def budget_analysis(budget_data):
         
     return num_of_months, prof_loss, average_change, monthly_change, greatest_increase, greatest_decrease
 
+
+#So, I completed the pypoll part of the assignment the first time around uising a "stupid" method that didn't use dictionaries. Once we had gone over dictionaries in class, 
+#I realized that I could use disctionaries, and I went back and redid the script to utilize dictionaries. I've included the my old script because I am happy that I managed  
+#to do it my way first, but I also wanted to provide the "right" way to do it based off our previous exercises.
+def election_analysis(election_data):
+    total_votes = 0
+    candidate_votes = {'Charles Casper Stockham': 0, 'Diana DeGette': 0, 'Raymon Anthony Doane': 0}
+    #OLD STUPID CODE
+    #charles_votes = 0
+    #charles_percent = None
+    #diana_votes = 0 
+    #diana_percent = None
+    #raymon_votes = 0 
+    #raymon_percent = None
+    winner = None
+    max_votes = 0
+
+    with open(election_data, 'r') as csvfile:
+        csvreader2 = csv.reader(csvfile, delimiter=',')
+
+        next(csvreader2)
+
+        for row in csvreader2:
+            
+            total_votes += 1
+            candidate_name = str(row[2])
+            if candidate_name in candidate_votes:
+                candidate_votes[candidate_name] += 1
+            #OLD STUPID CODE
+            #if str(row[2]) == 'Charles Casper Stockham':
+                #charles_votes += 1
+            #if str(row[2]) == 'Diana DeGette':
+                #diana_votes += 1
+            #if str(row[2]) == 'Raymon Anthony Doane':
+                #raymon_votes += 1
+        #charles_percent = round(charles_votes/total_votes*100,3)
+        #diana_percent = round(diana_votes/total_votes*100,3)
+        #raymon_percent = round(raymon_votes/total_votes*100,3)
+
+        #candidates.append(charles_votes, diana_votes, raymon_votes)
+        #for candidate in candidates:
+            #winner = 
+    for candidate, votes in candidate_votes.items():
+        if votes > max_votes:
+            max_votes = votes
+            winner = candidate
+        
+    return total_votes, winner, candidate_votes
+
+
+#output_financial = (
+    #f"Financial Analysis\n"
+    #f"----------------------------\n"
+    #f"Total Months: {total_months}\n"
+    #f"Total: ${total_net}\n"
+    #f"Average Change: ${net_monthly_avg:.2f}\n"
+    #f"Greatest Increase in Profits: {greatest_increase[0]} (${greatest_increase[1]})\n"
+    #f"Greatest Decrease in Profits: {greatest_decrease[0]} (${greatest_decrease[1]})\n")
+
+#output_election == (
+    #f"Financial Analysis\n"
+    #f"----------------------------\n"
+    #f"Total Months: {total_months}\n"
+    #f"Total: ${total_net}\n"
+    #f"Average Change: ${net_monthly_avg:.2f}\n"
+    #f"Greatest Increase in Profits: {greatest_increase[0]} (${greatest_increase[1]})\n"
+    #f"Greatest Decrease in Profits: {greatest_decrease[0]} (${greatest_decrease[1]})\n")
+
+
+    #with open(file_to_output, "w") as txt_file:
+    #txt_file.write(output)
+
+
 total_months, total_prof_loss, average_change, monthly_change, greatest_increase, greatest_decrease = budget_analysis(budget_data)
-print("")
-print("Financial Analysis")
-print("")
-print("----------------------------")
-print("")
-print("Total months: ", total_months)
-print("")
-print("Total: ", total_prof_loss)
-print("")
-print("Average change: ", average_change)
-print("")
-print("Greatest increase in profits: ", greatest_increase)
-print("")
-print("Greatest decrease in profits: ", greatest_decrease)
-print("")
-## I used this to double check my answers by cross referencing the returned list to Excel data
-#print("Here's a list of monthly changes: ", monthly_change) 
+print("Financial Analysis\n")
+print("----------------------------\n")
+print(f"Total months: {total_months}\n")
+print(f"Total: ${total_prof_loss}\n")
+print(f"Average change: ${round(average_change,2)}\n")
+print(f"Greatest increase in profits: (${greatest_increase})\n")
+print(f"Greatest decrease in profits: (${greatest_decrease})\n")
+
+
+with open(output_file_budget, 'w') as file:
+    file.write("Financial Analysis\n")
+    file.write("\n")
+    file.write("----------------------------\n")
+    file.write("\n")
+    file.write(f"Total months: {total_months}\n")
+    file.write("\n")
+    file.write(f"Total: {total_prof_loss}\n")
+    file.write("\n")
+    file.write(f"Average change: {average_change}\n")
+    file.write("\n")
+    file.write(f"Greatest increase in profits: {greatest_increase}\n")
+    file.write("\n")
+    file.write(f"Greatest decrease in profits: {greatest_decrease}\n")
+
+
+ #OLD STUPID CODE
+ #return total_votes, charles_votes, diana_votes, raymon_votes, charles_percent, diana_percent, raymon_percent
+#total_votes, charles_votes,diana_votes, raymon_votes, charles_percent, diana_percent, raymon_percent= election_analysis(election_data)
+
+
+total_votes, winner, candidate_votes =election_analysis(election_data)
+with open(output_file_election, 'w') as file:
+    file.write("Election Results\n")
+    file.write("\n")
+    file.write("-------------------------\n")
+    file.write("\n")
+    file.write(f"Total Votes: {total_votes}\n")
+    file.write("\n")
+    file.write("-------------------------\n")
+    file.write("\n")
+    for candidate, votes in candidate_votes.items():
+        percent = round(votes / total_votes * 100, 3)
+        file.write(f"{candidate}: {percent}% ({votes})\n")
+    file.write("\n")
+    file.write("-------------------------\n")
+    file.write(f"Winner: {winner}\n")
+
+
+#OLD STUPID CODE
+# print("Total Votes: ",total_votes)
+#print("")
+#print("-------------------------")
+#print("")
+#print("Charles Casper Stockham: ", charles_percent,"%", "(",charles_votes,")")
+#print("")
+#print("Diana DeGette: ", diana_percent,"%", "(", diana_votes, ")")
+#print("")
+#print("Raymon Anthony Doane: ", raymon_percent,"%", "(", raymon_votes, ")")
+#print("")
+#print("-------------------------")
+#print("")
